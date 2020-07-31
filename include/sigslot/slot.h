@@ -126,8 +126,6 @@ private:
 
 
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 /// Inline stuff
 ///
@@ -206,14 +204,13 @@ slot<Ret, Args...>::operator=(slot&& s)
 }
 
 
-
-
 template<typename Ret, typename... Args>
 inline bool
 slot<Ret, Args...>::isLinked(void) const
 {
     return !signals_.empty();
 }
+
 template<typename Ret, typename... Args>
 inline bool
 slot<Ret, Args...>::isLinked(const Signal* s) const
@@ -245,6 +242,7 @@ slot<Ret, Args...>::unlink(const Signal* s)
 {
     unlink(s, true);
 }
+
 template<typename Ret, typename... Args>
 inline void
 slot<Ret, Args...>::unlinkAll(void)

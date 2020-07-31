@@ -1,6 +1,12 @@
 #ifndef SIGSLOT_SIGNAL_H_
 #define SIGSLOT_SIGNAL_H_
 
+#ifdef DEBUG
+    #include <cassert>
+    #define ASSERT(x) assert(x)
+#else
+    #define ASSERT(x)
+#endif
 
 #include <sigslot/slot.h>
 
@@ -20,7 +26,7 @@ public:
 
     inline signal(const signal&) = delete;
     inline signal(signal&&) = delete;
-    inline signal& operator=(signal&&) = delete;
+    inline signal& operator=(const signal&) = delete;
     inline signal& operator=(signal&&) = delete;
 
     ///
@@ -30,7 +36,9 @@ public:
     inline void
     addSlot(Slot* s)
     {
-        if (s == 0 || contains(s)) return;
+        if (s == 0 || contains(s)) {
+            return;
+        }
         // automatically call to the function to add the slot in this class
         s->link(this);
     }
@@ -43,7 +51,11 @@ public:
     inline bool
     contains(const Slot* s) const
     {
-        for (const Slot* sl : slots_) if (s == sl) return true;
+        for (const Slot* sl : slots_) {
+            if (s == sl) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -64,7 +76,9 @@ public:
     inline void
     removeSlot(Slot* s)
     {
-        if (s == 0) return;
+        if (s == 0) {
+            return;
+        }
         // automatically call to the function to remove the slot in this class
         s->unlink(this, true);
     }
@@ -79,11 +93,11 @@ public:
     }
 
     ///
-    /// \brief emitSignal emit the signal
+    /// \brief emit emit the signal
     /// \param args
     ///
     inline void
-    emitSignal(Args... args)
+    emit(Args... args)
     {
         for (Slot* sl : slots_) {
             ASSERT(sl != 0);

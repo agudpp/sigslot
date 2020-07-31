@@ -55,7 +55,7 @@ TEST(SignalSlot, NormalFunctionalities)
     EXPECT_EQ(sl1.isLinked(), true);
     EXPECT_EQ(sl2.isLinked(), true);
 
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(3, r1.val);
     EXPECT_EQ(3, r2.val);
 
@@ -63,14 +63,14 @@ TEST(SignalSlot, NormalFunctionalities)
     EXPECT_EQ(sl1.isLinked(), false);
     EXPECT_EQ(sl2.isLinked(), true);
 
-    sig.emitSignal(11);
+    sig.emit(11);
     EXPECT_EQ(3, r1.val);
     EXPECT_EQ(11, r2.val);
 
     sl2.unlinkAll();
     EXPECT_EQ(sl2.isLinked(), false);
 
-    sig.emitSignal(111);
+    sig.emit(111);
     EXPECT_EQ(3, r1.val);
     EXPECT_EQ(11, r2.val);
 
@@ -91,7 +91,7 @@ TEST(SignalSlot, ScopeFunctions)
     EXPECT_EQ(sl1.isLinked(), true);
     EXPECT_EQ(sl2.isLinked(), false);
 
-    sig.emitSignal(3);
+    sig.emit(3);
 
     EXPECT_EQ(3, r1.val);
     EXPECT_EQ(0, r2.val);
@@ -102,11 +102,11 @@ TEST(SignalSlot, ScopeFunctions)
         RecvSignal sig2;
         sig2.addSlot(&sl1);
 
-        sig.emitSignal(6);
+        sig.emit(6);
         EXPECT_EQ(6, r1.val);
         EXPECT_EQ(0, r2.val);
 
-        sig2.emitSignal(11);
+        sig2.emit(11);
         EXPECT_EQ(11, r1.val);
         EXPECT_EQ(0, r2.val);
     }
@@ -135,22 +135,22 @@ TEST(SignalSlot, CopySlot)
     EXPECT_EQ(sl1.isLinked(), false);
     EXPECT_EQ(sl2.isLinked(), true);
 
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(3, r1.val);
 
     sl1 = sl2;
     sig.addSlot(&sl1);
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(6, r1.val);
 
     sig.addSlot(&sl2);
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(12, r1.val);
     sl2.unlinkAll();
 
     RecvSlot sl3 = sl1;
     sl3.setCallback(std::bind(&ReceiverAcum::method, &r2, std::placeholders::_1));
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(12, r1.val);
     EXPECT_EQ(3, r2.val);
 
@@ -173,7 +173,7 @@ TEST(SignalSlot, CopySlotVector)
     EXPECT_EQ(sl1.isLinked(), false);
     EXPECT_EQ(sl2.isLinked(), true);
 
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(3, r1.val);
 
     struct S1 {
@@ -188,14 +188,14 @@ TEST(SignalSlot, CopySlotVector)
     EXPECT_EQ(sl2.isLinked(), false);
     EXPECT_EQ(a.sl.isLinked(), false);
     EXPECT_EQ(b.sl.isLinked(), true);
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(6, r1.val);
     sVec.push_back(b.sl);
     for (unsigned int i = 0; i < 104; ++i) {
         sVec.push_back(sVec.back());
     }
 
-    sig.emitSignal(3);
+    sig.emit(3);
     EXPECT_EQ(9, r1.val);
 }
 
@@ -215,16 +215,16 @@ TEST(SignalSlot, MultipleSignalsPerSlot)
     sig2.addSlot(&sl1);
     sig3.addSlot(&sl1);
 
-    sig.emitSignal(1);
+    sig.emit(1);
     EXPECT_EQ(1, r1.val);
-    sig2.emitSignal(1);
+    sig2.emit(1);
     EXPECT_EQ(2, r1.val);
-    sig3.emitSignal(1);
+    sig3.emit(1);
     EXPECT_EQ(3, r1.val);
 
-    sig.emitSignal(1);
-    sig2.emitSignal(1);
-    sig3.emitSignal(1);
+    sig.emit(1);
+    sig2.emit(1);
+    sig3.emit(1);
     EXPECT_EQ(6, r1.val);
 
     EXPECT_EQ(true, sl1.isLinked());
@@ -235,9 +235,9 @@ TEST(SignalSlot, MultipleSignalsPerSlot)
     sig3.removeSlot(&sl1);
     EXPECT_EQ(false, sl1.isLinked());
 
-    sig.emitSignal(1);
-    sig2.emitSignal(1);
-    sig3.emitSignal(1);
+    sig.emit(1);
+    sig2.emit(1);
+    sig3.emit(1);
     EXPECT_EQ(6, r1.val);
 
     // add the slots and now copy to the sl2
@@ -246,9 +246,9 @@ TEST(SignalSlot, MultipleSignalsPerSlot)
     sig3.addSlot(&sl1);
     EXPECT_EQ(true, sl1.isLinked());
 
-    sig.emitSignal(1);
-    sig2.emitSignal(1);
-    sig3.emitSignal(1);
+    sig.emit(1);
+    sig2.emit(1);
+    sig3.emit(1);
     EXPECT_EQ(9, r1.val);
 
     EXPECT_EQ(false, sl2.isLinked());
@@ -256,9 +256,9 @@ TEST(SignalSlot, MultipleSignalsPerSlot)
     EXPECT_EQ(false, sl1.isLinked());
     EXPECT_EQ(true, sl2.isLinked());
 
-    sig.emitSignal(1);
-    sig2.emitSignal(1);
-    sig3.emitSignal(1);
+    sig.emit(1);
+    sig2.emit(1);
+    sig3.emit(1);
     EXPECT_EQ(12, r1.val);
 }
 
