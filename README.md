@@ -3,6 +3,7 @@ A very old code rescued from old project to be re-used (considerations to be mad
 
 Very basic signal slot system for c++ (11) using without boost, to auto-desconect the slots from the signals when objects
 are destroyed.
+
 **Header files only, no need to compile the library**
 
 # Compiling / testing
