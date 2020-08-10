@@ -3,9 +3,9 @@
 
 #ifdef DEBUG
     #include <cassert>
-    #define ASSERT(x) assert(x)
+    #define SIGSLOT_ASSERT(x) assert(x)
 #else
-    #define ASSERT(x)
+    #define SIGSLOT_ASSERT(x)
 #endif
 
 #include <sigslot/slot.h>
@@ -100,7 +100,7 @@ public:
     emit(Args... args)
     {
         for (Slot* sl : slots_) {
-            ASSERT(sl != 0);
+            SIGSLOT_ASSERT(sl != 0);
             if (sl->callback()) {
                 sl->callback()(args...);
             }
@@ -150,7 +150,7 @@ private:
     slotAddRef(Slot* slot)
     {
         // if the slot is calling this we shouldn't have the slot already
-        ASSERT(!contains(slot));
+        SIGSLOT_ASSERT(!contains(slot));
         slots_.push_back(slot);
     }
 
